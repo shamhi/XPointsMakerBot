@@ -1,0 +1,8 @@
+aiohttp
+aiohttp-proxy
+aiohttp-socks
+loguru
+requests[socks]
+parsel
+playwright
+w3lib

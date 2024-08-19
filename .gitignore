@@ -1,0 +1,6 @@
+.vscode
+.debug
+__pycache__
+config/data.txt
+config/proxies.txt
+config/user-agent.txt
