@@ -19,7 +19,7 @@
 
 1. Для запуска бота нужно создать файл построчно с извлеченным значением поля `webAppInitData` из запроса https://points-bot-api.bookmaker.xyz/get-profile. Должна быть строка вида:
 
-`user=%7B%22id4345646456451%2C%22first_name%22%3A%dfgdfgdfg%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%dfghsgrdfgdfg%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-457567675675&chat_type=sender&auth_date=175657657&hash=66487465e9877w98rf7sdfsdjh48484343herfuh4y4rwseifs`
+`query_id=XXXXXXXXXXXXXXX&user=%7B%22id4345646456451%2C%22first_name%22%3A%dfgdfgdfg%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%dfghsgrdfgdfg%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-457567675675&chat_type=sender&auth_date=175657657&hash=66487465e9877w98rf7sdfsdjh48484343herfuh4y4rwseifs`
 
 2. В той же последовательности заполнить файл `proxies.txt` адресами `http://login:pass@ip:port`. Если для какого-то аккаунта не нужен прокси то, в соответствущей строке `proxies.txt` ввести слово `none`
 
