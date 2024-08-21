@@ -1,5 +1,6 @@
 import json
 import urllib.parse
+from fake_useragent import UserAgent
 from utils.logger import logger
 from config import settings
 from config.settings import user_data
@@ -28,6 +29,7 @@ async def get_session():
                 user_data[i]["id"] = decoded_data["id"]
                 i += 1
 
+            file.close()
             user_data["count_user"] = i
             logger.info(f"System | List <c>[{i}]</c> session is loaded...")
             return True
@@ -46,7 +48,8 @@ async def get_user_agent():
                     i += 1
                     if i >= len(user_data) - 1:
                         break
-
+                
+                file.close()
                 if user_data["count_user"] > i:
                     logger.error(
                         f"System | The number of user-agent is less than the number of sessions"
@@ -56,15 +59,15 @@ async def get_user_agent():
                     logger.success(f"System | List <c>[{i}]</c> user-agent download...")
                     return True
         else:
-            for i in range(user_data["count_user"]):
-                user_data[i][
-                    "user-agent"
-                ] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0"
-            logger.success(f"System | Default user-agent download...")
-            return False
+            raise
 
     except Exception as e:
-        logger.error(f"{e}")
+        if e:
+            logger.error(f"{e}")
+            ua = UserAgent()
+            for i in range(user_data["count_user"]):
+                user_data[i]['user-agent'] = ua.random.strip()
+            logger.success(f"System | Default user-agent download...")
         return False
 
 
@@ -78,7 +81,8 @@ async def get_proxies():
                 for line in file:
                     user_data[i]["proxy"] = line.strip()
                     i += 1
-
+                
+                file.close()
                 if user_data["count_user"] > i:
                     logger.error(
                         f"System | The number of proxies is less than the number of sessions"
@@ -88,11 +92,13 @@ async def get_proxies():
                     logger.success(f"System | List <c>[{i}]</c> proxy  download...")
                     return True
         else:
-            for i in range(user_data["count_user"]):
-                user_data[i]["proxy"] = None
-            logger.success(f"System | None proxy...")
-            return False
+            raise
 
     except Exception as e:
-        logger.error(f"{e}")
+        if e:
+            logger.error(f"{e}")
+
+        for i in range(user_data["count_user"]):
+            user_data[i]["proxy"] = "none"
+
         return False

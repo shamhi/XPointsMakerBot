@@ -1,8 +1,7 @@
-aiohttp
-aiohttp-proxy
-aiohttp-socks
-loguru
-requests[socks]
-parsel
-playwright
-w3lib
+aiohttp==3.9.5
+fake_useragent==1.5.1
+loguru==0.7.2
+parsel==1.9.1
+playwright==1.46.0
+Requests==2.32.3
+w3lib==2.2.1
