@@ -10,8 +10,10 @@ async def main():
 
     global user_data
     global tasks
-    logger.warning(f"System | <y>Random wait "
-                   f"{settings.WAIT_LOGIN[0]}-{settings.WAIT_LOGIN[1]} sec to authorization!</y>")
+    logger.warning(
+        f"System | <y>Random wait "
+        f"{settings.WAIT_LOGIN[0]}-{settings.WAIT_LOGIN[1]} sec to authorization!</y>"
+    )
 
     if not await get_session():
         logger.error(f"Error load session...")
@@ -22,7 +24,7 @@ async def main():
     if not await get_user_agent():
         logger.error(f"Error load user agent...")
 
-    tasks = [start(index) for index in range(user_data['count_user'])]
+    tasks = [start(index) for index in range(user_data["count_user"])]
     await asyncio.gather(*tasks)
 
 
