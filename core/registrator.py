@@ -125,8 +125,8 @@ async def start(index):
 
 async def loop_get_active_event(session, index):
     while True:
-        logger.info(f"{user_data[index]['username'][:15].ljust(
-            15, ' ')} | Checking the possibility of making bets")
+        logger.info(f"{user_data[index]['username'][:15].ljust(15, ' ')}"
+                    f" | Checking the possibility of making bets")
         await get_active_event(session, index)
 
 
