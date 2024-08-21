@@ -132,6 +132,6 @@ async def loop_get_active_event(session, index):
 
 async def loop_boost_level(session, index):
     while True:
-        logger.info(f"{user_data[index]['username'][:15].ljust(
-            15, ' ')} | Checking the possibility of level up")
+        logger.info(f"{user_data[index]['username'][:15].ljust(15, ' ')}"
+                    f" | Checking the possibility of level up")
         await boost_level(session, index)
