@@ -11,7 +11,7 @@ banner = """
    ░█    ▀▄▀   ▄▀   ░█  ▀  █ █▄▄█  ██   █▀▀  █▄▄▀  ░█▀▀▄ █  █   █
  ░▄▀ ▀▄   █   █▄▄▄  ░█     █ ▀  ▀ ▄█ ▀▄ █▄▄█ ▀ ▀▀  ░█▄▄█ ▀▀▀▀   ▀
 
- X-Points Maker Bot                                          v.1.3 
+ X-Points Maker Bot                                          v.1.4 
 """
 
 
@@ -25,7 +25,12 @@ async def get_session():
                 user_data[i]["init_data"] = line.strip()
                 decoded_data = urllib.parse.parse_qs(line)
                 decoded_data = json.loads(decoded_data["user"][0])
-                user_data[i]["username"] = decoded_data["username"]
+                uname = decoded_data["username"]
+                if uname:
+                    user_data[i]["username"] = decoded_data.get("username")
+                else:
+                    user_data[i]["username"] = decoded_data.get("first_name")
+
                 user_data[i]["id"] = decoded_data["id"]
                 i += 1
 
