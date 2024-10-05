@@ -9,7 +9,7 @@ from config.settings import *
 import utils.geoip as geoip
 
 
-async def get_profile(session, index):
+async def get_profile(session: aiohttp.ClientSession, index: int):
     global user_data
     payload = {
         "webAppInitData": user_data[index]["init_data"],
@@ -25,6 +25,7 @@ async def get_profile(session, index):
             "https://points-bot-api.bookmaker.xyz/get-profile",
             json=payload,
             headers=headers,
+            ssl=settings.ENABLED_SSL,
         ) as response:
             return await response.json()
     else:
@@ -33,11 +34,12 @@ async def get_profile(session, index):
             json=payload,
             headers=headers,
             proxy=user_data[index]["proxy"],
+            ssl=settings.ENABLED_SSL,
         ) as response:
             return await response.json()
 
 
-async def login(session, index):
+async def login(session: aiohttp.ClientSession, index: int):
     url = "https://points-bot-api.bookmaker.xyz/start"
     payload = {
         "webAppInitData": user_data[index]["init_data"],
@@ -52,16 +54,22 @@ async def login(session, index):
     }
 
     if user_data[index]["proxy"].lower() == "none":
-        async with session.post(url, json=payload, headers=headers):
+        async with session.post(
+            url, json=payload, headers=headers, ssl=settings.ENABLED_SSL
+        ):
             ...
     else:
         async with session.post(
-            url, json=payload, headers=headers, proxy=user_data[index]["proxy"]
+            url,
+            json=payload,
+            headers=headers,
+            proxy=user_data[index]["proxy"],
+            ssl=settings.ENABLED_SSL,
         ):
             ...
 
 
-async def parse_profile(profile_data, index):
+async def parse_profile(profile_data: list, index: int):
     global user_data
 
     user_data[index]["level"] = profile_data["currentLevel"]["level"]
@@ -86,7 +94,7 @@ async def parse_profile(profile_data, index):
     )
 
 
-async def start(index):
+async def start(index: int):
 
     global tasks
     global user_data
@@ -125,20 +133,31 @@ async def start(index):
         await asyncio.sleep(5)
         await parse_profile(profile_data, index)
 
+        if user_data[index]["points"] > settings.MAX_TAP_POINT:
+            logger.warning(
+                f"{user_data[index]['username'][:15].ljust(15, ' ')} | <y>Maining on TAP stoped. Points > {settings.MAX_TAP_POINT:,}</y>"
+            )
+
         # добавим задачу проверки события и выполнение автоставок
         if settings.AUTO_BET == True:
             tasks.append(asyncio.create_task(loop_get_active_event(session, index)))
+            logger.success(
+                f"{user_data[index]['username'][:15].ljust(15, ' ')} | <g>Mining on BET start of 3 hour!</g>"
+            )
 
         # добавим задачу проверки и повышения уровня
         if settings.AUTO_UPGRADE == True and user_data[index]["level"] < 30:
             tasks.append(asyncio.create_task(loop_boost_level(session, index)))
+            logger.success(
+                f"{user_data[index]['username'][:15].ljust(15, ' ')} | <g>Check level Up of 10 min!</g>"
+            )
 
         while True:
             # logger.info(f"[{index}] tap_tap")
             await tap_tap(session, index)
 
 
-async def loop_get_active_event(session, index):
+async def loop_get_active_event(session: aiohttp.ClientSession, index: int):
     while True:
         logger.info(
             f"{user_data[index]['username'][:15].ljust(15, ' ')}"
@@ -147,10 +166,13 @@ async def loop_get_active_event(session, index):
         await get_active_event(session, index)
 
 
-async def loop_boost_level(session, index):
+async def loop_boost_level(session: aiohttp.ClientSession, index: int):
     while True:
         logger.info(
             f"{user_data[index]['username'][:15].ljust(15, ' ')}"
-            f" | Checking the possibility of level up"
+            f" | Checking the possibility of level up "
+            f" | Level: <e>{user_data[index]['level']}/"
+            f"{user_data[index]['maxLevel']}</e>"
+            f" | Next: <y>{user_data[index]['upgradeCost']:,}</y>"
         )
         await boost_level(session, index)

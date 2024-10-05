@@ -1,4 +1,5 @@
 import asyncio
+import aiohttp
 from parsel import Selector
 from playwright.async_api import async_playwright
 from w3lib.url import add_or_replace_parameter
@@ -12,7 +13,7 @@ from config import settings
 from config.settings import user_data, tasks
 
 
-async def tap_tap(session, index):
+async def tap_tap(session: aiohttp.ClientSession, index):
 
     global user_data
 
@@ -31,12 +32,22 @@ async def tap_tap(session, index):
     try:
         tap_wait_ms = random.randint(settings.WAIT_TAP[0], settings.WAIT_TAP[1])
 
+        if user_data[index]["points"] > settings.MAX_TAP_POINT:
+            await asyncio.sleep(3600)
+            return
+
         if user_data[index]["proxy"].lower() == "none":
-            async with session.post(url, headers=headers, json=payload) as response:
+            async with session.post(
+                url, headers=headers, json=payload, ssl=settings.ENABLED_SSL
+            ) as response:
                 result = await response.json()
         else:
             async with session.post(
-                url, headers=headers, json=payload, proxy=user_data[index]["proxy"]
+                url,
+                headers=headers,
+                json=payload,
+                proxy=user_data[index]["proxy"],
+                ssl=settings.ENABLED_SSL,
             ) as response:
                 result = await response.json()
 
@@ -67,7 +78,7 @@ async def tap_tap(session, index):
         logger.info(f"{exc_type}: {exc_obj} | {fname} | {exc_tb.tb_lineno}")
 
 
-async def get_active_event(session, index):
+async def get_active_event(session: aiohttp.ClientSession, index):
     payload = {
         "webAppInitData": user_data[index]["init_data"],
         "userId": user_data[index]["id"],
@@ -80,11 +91,17 @@ async def get_active_event(session, index):
     url = f"https://points-bot-api.bookmaker.xyz/get-active-event"
 
     if user_data[index]["proxy"].lower() == "none":
-        async with session.post(url, headers=headers, json=payload) as response:
+        async with session.post(
+            url, headers=headers, json=payload, ssl=settings.ENABLED_SSL
+        ) as response:
             result = await response.json()
     else:
         async with session.post(
-            url, headers=headers, json=payload, proxy=user_data[index]["proxy"]
+            url,
+            headers=headers,
+            json=payload,
+            proxy=user_data[index]["proxy"],
+            ssl=settings.ENABLED_SSL,
         ) as response:
             result = await response.json()
 
@@ -204,7 +221,7 @@ async def get_url_event(index):
         return None
 
 
-async def set_place_bet(session, index):
+async def set_place_bet(session: aiohttp.ClientSession, index):
 
     outcomeId = await get_url_event(index)
     if not outcomeId:
@@ -228,11 +245,17 @@ async def set_place_bet(session, index):
     url = f"https://points-bot-api.bookmaker.xyz/place-bet"
 
     if user_data[index]["proxy"].lower() == "none":
-        async with session.post(url, headers=headers, json=payload) as response:
+        async with session.post(
+            url, headers=headers, json=payload, ssl=settings.ENABLED_SSL
+        ) as response:
             ...
     else:
         async with session.post(
-            url, headers=headers, json=payload, proxy=user_data[index]["proxy"]
+            url,
+            headers=headers,
+            json=payload,
+            proxy=user_data[index]["proxy"],
+            ssl=settings.ENABLED_SSL,
         ) as response:
             ...
 
@@ -248,7 +271,7 @@ async def set_place_bet(session, index):
         )
 
 
-async def boost_level(session, index):
+async def boost_level(session: aiohttp.ClientSession, index):
 
     from core.registrator import get_profile, parse_profile
 
@@ -276,11 +299,17 @@ async def boost_level(session, index):
     url = f"https://points-bot-api.bookmaker.xyz/boost-level"
 
     if user_data[index]["proxy"].lower() == "none":
-        async with session.post(url, headers=headers, json=payload) as response:
+        async with session.post(
+            url, headers=headers, json=payload, ssl=settings.ENABLED_SSL
+        ) as response:
             ...
     else:
         async with session.post(
-            url, headers=headers, json=payload, proxy=user_data[index]["proxy"]
+            url,
+            headers=headers,
+            json=payload,
+            proxy=user_data[index]["proxy"],
+            ssl=settings.ENABLED_SSL,
         ) as response:
             ...
 

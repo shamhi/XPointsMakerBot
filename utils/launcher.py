@@ -7,11 +7,15 @@ from config.settings import user_data
 
 banner = """
 
- ░▀▄ ▄▀ █   █ ▀▀▀█  ░█▀▄ ▄▀█ █▀▀█ ▀█ ▄▀ █▀▀▀ █▀▀█  ░█▀▀█ █▀▀█ ▀▀█▀▀
-   ░█    ▀▄▀   ▄▀   ░█  ▀  █ █▄▄█  ██   █▀▀  █▄▄▀  ░█▀▀▄ █  █   █
- ░▄▀ ▀▄   █   █▄▄▄  ░█     █ ▀  ▀ ▄█ ▀▄ █▄▄█ ▀ ▀▀  ░█▄▄█ ▀▀▀▀   ▀
+██╗░░██╗██╗░░░██╗███████╗  ███╗░░░███╗░█████╗░██╗░░██╗███████╗██████╗░
+╚██╗██╔╝╚██╗░██╔╝╚════██║  ████╗░████║██╔══██╗██║░██╔╝██╔════╝██╔══██╗
+░╚███╔╝░░╚████╔╝░░░███╔═╝  ██╔████╔██║███████║█████═╝░█████╗░░██████╔╝
+░██╔██╗░░░╚██╔╝░░██╔══╝░░  ██║╚██╔╝██║██╔══██║██╔═██╗░██╔══╝░░██╔══██╗
+██╔╝╚██╗░░░██║░░░███████╗  ██║░╚═╝░██║██║░░██║██║░╚██╗███████╗██║░░██║
+╚═╝░░╚═╝░░░╚═╝░░░╚══════╝  ╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝
 
- X-Points Maker Bot                                          v.1.4 
+ X-Points Maker Bot                                          v.1.5
+
 """
 
 
@@ -25,7 +29,7 @@ async def get_session():
                 user_data[i]["init_data"] = line.strip()
                 decoded_data = urllib.parse.parse_qs(line)
                 decoded_data = json.loads(decoded_data["user"][0])
-                uname = decoded_data["username"]
+                uname = decoded_data.get("username")
                 if uname:
                     user_data[i]["username"] = decoded_data.get("username")
                 else:

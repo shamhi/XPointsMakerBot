@@ -2,7 +2,7 @@ import requests
 import re
 
 
-def get_geo_info(ip_address):
+def get_geo_info(ip_address: str):
     url = f"http://ipinfo.io/{ip_address}/json"
     response = requests.get(url)
 
@@ -12,7 +12,7 @@ def get_geo_info(ip_address):
         return None
 
 
-def extract_ip_addresses(text):
+def extract_ip_addresses(text: str):
     # Регулярное выражение для поиска IPv4 адресов
     ip_pattern = r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"
     # Найти все совпадения в тексте
